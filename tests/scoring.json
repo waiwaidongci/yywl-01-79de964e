@@ -1,0 +1,218 @@
+{
+  "schema_version": 1,
+  "weight_policy": {
+    "version": 1,
+    "basis": "business_priority",
+    "core_min_share": 0.5
+  },
+  "gate_tests": [
+    "test_outputs.py::test_candidate_produces_complete_model"
+  ],
+  "tests": {
+    "test_outputs.py::test_aligns_unlabeled_runs_by_route_structure": {
+      "weight": 0.06,
+      "priority": "core",
+      "rationale": "跨回放恢复未标号阶段对应关系，是整份模型可重放的核心前提。"
+    },
+    "test_outputs.py::test_local_ids_are_not_global_stage_keys": {
+      "weight": 0.06,
+      "priority": "core",
+      "rationale": "本地短号不能跨回放复用，否则任何编号变化都会破坏模型一致性。"
+    },
+    "test_outputs.py::test_service_class_participates_in_alignment": {
+      "weight": 0.06,
+      "priority": "core",
+      "rationale": "服务类别必须参与联合对齐，否则重复类别会留下无法消除的排列歧义。"
+    },
+    "test_outputs.py::test_canonical_stage_order_from_rooted_roles": {
+      "weight": 0.06,
+      "priority": "core",
+      "rationale": "根化角色规范顺序是跨采集标识稳定比较阶段模型的必要业务口径。"
+    },
+    "test_outputs.py::test_aggregates_visits_entries_exits_and_edges": {
+      "weight": 0.06,
+      "priority": "core",
+      "rationale": "跨回放计数聚合决定阶段负载、入口分布和路由概率的业务正确性。"
+    },
+    "test_outputs.py::test_entry_distribution_uses_aggregate_counts": {
+      "weight": 0.06,
+      "priority": "core",
+      "rationale": "入口分布是吸收链投影的初始条件，聚合口径错误会传导到全部期望值。"
+    },
+    "test_outputs.py::test_transition_probabilities_use_global_support": {
+      "weight": 0.06,
+      "priority": "core",
+      "rationale": "转移概率必须按全部回放的支持量归一，不能把班次概率简单平均。"
+    },
+    "test_outputs.py::test_expected_visits_solve_fundamental_matrix": {
+      "weight": 0.06,
+      "priority": "core",
+      "rationale": "期望访问次数是容量复核的核心结果，需正确闭合回访与自环效应。"
+    },
+    "test_outputs.py::test_expected_cycle_service_matches_projection": {
+      "weight": 0.06,
+      "priority": "core",
+      "rationale": "周期服务工作量把阶段参数与路由结构合成最终业务指标。"
+    },
+    "test_outputs.py::test_full_cross_run_recovery_combination": {
+      "weight": 0.06,
+      "priority": "core",
+      "rationale": "十二阶段五回放同时覆盖对应关系、聚合、规范化与吸收链闭合。"
+    },
+    "test_outputs.py::test_rejects_inconsistent_nonzero_edge_support": {
+      "weight": 0.013,
+      "priority": "boundary",
+      "rationale": "非零边关系不一致时必须拒绝输入，防止拼出并不存在的跨回放流程。"
+    },
+    "test_outputs.py::test_rejects_nonunique_rooted_roles": {
+      "weight": 0.013,
+      "priority": "boundary",
+      "rationale": "相同根化角色意味着阶段身份不唯一，发布任意标签都会产生不可复现结果。"
+    },
+    "test_outputs.py::test_run_and_local_id_permutations_are_byte_identical": {
+      "weight": 0.013,
+      "priority": "supporting",
+      "rationale": "回放重排和短号改名后仍保持原字节，才能支持审计与容量复核复现。"
+    },
+    "test_outputs.py::test_merges_service_samples_for_global_median": {
+      "weight": 0.013,
+      "priority": "supporting",
+      "rationale": "服务样本必须按全部对齐观测合并，否则阶段时长参数会受回放权重误导。"
+    },
+    "test_outputs.py::test_exit_probability_uses_outgoing_denominator": {
+      "weight": 0.013,
+      "priority": "supporting",
+      "rationale": "出口与后继边共享离开分母，行闭合才能保证吸收链概率解释成立。"
+    },
+    "test_outputs.py::test_support_ratio_and_aligned_runs": {
+      "weight": 0.013,
+      "priority": "recovery",
+      "rationale": "对齐支持度表明模型是否覆盖全部回放访问量，是完整性证据。"
+    },
+    "test_outputs.py::test_batch_id_is_copied_literally": {
+      "weight": 0.013,
+      "priority": "schema",
+      "rationale": "批次标识必须逐字保留，否则模型无法回指本次复核的数据快照。"
+    },
+    "test_outputs.py::test_output_uses_compact_sorted_json_bytes": {
+      "weight": 0.013,
+      "priority": "schema",
+      "rationale": "规范序列化保证相同模型跨采集环境具有可比较的原始字节。"
+    },
+    "test_outputs.py::test_output_has_final_newline_and_mode": {
+      "weight": 0.013,
+      "priority": "schema",
+      "rationale": "固定换行与权限是下游交换和可重复读取的交付前提。"
+    },
+    "test_outputs.py::test_success_streams_are_empty": {
+      "weight": 0.013,
+      "priority": "schema",
+      "rationale": "成功通道保持为空，调度器才能稳定区分正常发布与错误诊断。"
+    },
+    "test_outputs.py::test_strict_schema_refuses_equivalent_bad_shapes[SCHEMA-TOP-MISSING]": {
+      "weight": 0.013,
+      "priority": "schema",
+      "rationale": "严格键集合、类型、重复键和边界校验防止损坏的回放进入联合求解。"
+    },
+    "test_outputs.py::test_strict_schema_refuses_equivalent_bad_shapes[SCHEMA-TOP-EXTRA]": {
+      "weight": 0.013,
+      "priority": "schema",
+      "rationale": "严格键集合、类型、重复键和边界校验防止损坏的回放进入联合求解。"
+    },
+    "test_outputs.py::test_strict_schema_refuses_equivalent_bad_shapes[SCHEMA-RUN-MISSING]": {
+      "weight": 0.013,
+      "priority": "schema",
+      "rationale": "严格键集合、类型、重复键和边界校验防止损坏的回放进入联合求解。"
+    },
+    "test_outputs.py::test_strict_schema_refuses_equivalent_bad_shapes[SCHEMA-RUN-EXTRA]": {
+      "weight": 0.013,
+      "priority": "schema",
+      "rationale": "严格键集合、类型、重复键和边界校验防止损坏的回放进入联合求解。"
+    },
+    "test_outputs.py::test_strict_schema_refuses_equivalent_bad_shapes[SCHEMA-NODE-MISSING]": {
+      "weight": 0.013,
+      "priority": "schema",
+      "rationale": "严格键集合、类型、重复键和边界校验防止损坏的回放进入联合求解。"
+    },
+    "test_outputs.py::test_strict_schema_refuses_equivalent_bad_shapes[SCHEMA-NODE-EXTRA]": {
+      "weight": 0.013,
+      "priority": "schema",
+      "rationale": "严格键集合、类型、重复键和边界校验防止损坏的回放进入联合求解。"
+    },
+    "test_outputs.py::test_strict_schema_refuses_equivalent_bad_shapes[SCHEMA-EDGE-MISSING]": {
+      "weight": 0.013,
+      "priority": "schema",
+      "rationale": "严格键集合、类型、重复键和边界校验防止损坏的回放进入联合求解。"
+    },
+    "test_outputs.py::test_strict_schema_refuses_equivalent_bad_shapes[SCHEMA-EDGE-EXTRA]": {
+      "weight": 0.013,
+      "priority": "schema",
+      "rationale": "严格键集合、类型、重复键和边界校验防止损坏的回放进入联合求解。"
+    },
+    "test_outputs.py::test_strict_schema_refuses_equivalent_bad_shapes[SCHEMA-TYPE-ENUM]": {
+      "weight": 0.013,
+      "priority": "schema",
+      "rationale": "严格键集合、类型、重复键和边界校验防止损坏的回放进入联合求解。"
+    },
+    "test_outputs.py::test_strict_schema_refuses_equivalent_bad_shapes[SCHEMA-DUPLICATE]": {
+      "weight": 0.013,
+      "priority": "schema",
+      "rationale": "严格键集合、类型、重复键和边界校验防止损坏的回放进入联合求解。"
+    },
+    "test_outputs.py::test_stage_count_boundary[BOUND-STAGES-12]": {
+      "weight": 0.013,
+      "priority": "boundary",
+      "rationale": "阶段上限直接影响联合搜索规模，必须以公开边界接受并拒绝越界。"
+    },
+    "test_outputs.py::test_stage_count_boundary[BOUND-STAGES-13]": {
+      "weight": 0.013,
+      "priority": "boundary",
+      "rationale": "阶段上限直接影响联合搜索规模，必须以公开边界接受并拒绝越界。"
+    },
+    "test_outputs.py::test_service_sample_boundaries[BOUND-SAMPLES-32]": {
+      "weight": 0.013,
+      "priority": "boundary",
+      "rationale": "服务样本上界约束运行资源，32 与 33 的区分是公开输入契约。"
+    },
+    "test_outputs.py::test_service_sample_boundaries[BOUND-SAMPLES-33]": {
+      "weight": 0.013,
+      "priority": "boundary",
+      "rationale": "服务样本上界约束运行资源，32 与 33 的区分是公开输入契约。"
+    },
+    "test_outputs.py::test_run_count_boundary": {
+      "weight": 0.013,
+      "priority": "boundary",
+      "rationale": "回放数上限约束联合对应空间，超限输入应停止而不是继续扩张搜索。"
+    },
+    "test_outputs.py::test_edge_count_must_match_visit_balance": {
+      "weight": 0.013,
+      "priority": "boundary",
+      "rationale": "访问量守恒是路由概率分母成立的前提，失衡输入不能参与聚合。"
+    },
+    "test_outputs.py::test_parse_failure_is_quiet_and_traceback_free": {
+      "weight": 0.013,
+      "priority": "recovery",
+      "rationale": "解析失败需要稳定错误通道且无回溯噪声，避免调用方误收半成品。"
+    },
+    "test_outputs.py::test_schema_refusal_uses_exact_stderr_prefix": {
+      "weight": 0.013,
+      "priority": "recovery",
+      "rationale": "固定拒收前缀和原因码保证批处理可以可靠分类失败阶段。"
+    },
+    "test_outputs.py::test_unsupported_model_is_refused": {
+      "weight": 0.013,
+      "priority": "recovery",
+      "rationale": "非唯一模型必须明确拒收，不能发布依赖任意标签选择的伪结果。"
+    },
+    "test_outputs.py::test_publish_failure_preserves_bytes_mode_and_cleanliness": {
+      "weight": 0.013,
+      "priority": "recovery",
+      "rationale": "发布失败保持旧模型字节和权限，是审计场景下的关键恢复不变量。"
+    },
+    "test_outputs.py::test_upper_bound_batch_completes_within_public_limit": {
+      "weight": 0.01,
+      "priority": "boundary",
+      "rationale": "公开上限批次必须在时限内完成，证明实现没有依赖全排列枚举。"
+    }
+  }
+}
