@@ -7,6 +7,10 @@ from pathlib import Path
 import pytest
 
 
+def _verifier_source() -> str:
+    return Path(__file__).with_name("test.sh").read_text(encoding="utf-8")
+
+
 def test_test_sh_is_executable():
     """题面：「程序入口是 `/app/route_model.py`」"""
     script = Path(__file__).with_name("test.sh")
@@ -16,16 +20,16 @@ def test_test_sh_is_executable():
 
 def test_verifier_hard_timeout_leaves_cleanup_margin():
     """题面：「达到这个规模的一批数据需要在 40 秒内完成」"""
-    test_sh = Path(__file__).with_name("test.sh").read_text(encoding="utf-8")
-    kill_after = int(re.search(r"--kill-after=(\d+)s", test_sh).group(1))
-    watchdog = int(re.search(r"--kill-after=\d+s (\d+)s", test_sh).group(1))
+    verifier_source = _verifier_source()
+    kill_after = int(re.search(r"--kill-after=(\d+)s", verifier_source).group(1))
+    watchdog = int(re.search(r"--kill-after=\d+s (\d+)s", verifier_source).group(1))
     assert kill_after == 5
     assert kill_after < watchdog
 
 
 def test_verifier_completion_report_is_structured():
     """题面：「任何失败路径都不得打印 traceback、改写输入文件或发布半成品。」"""
-    text = Path(__file__).with_name("test.sh").read_text(encoding="utf-8")
+    text = _verifier_source()
     assert "verification-status.txt" in text
     assert "INCOMPLETE:" in text
     assert "COMPLETED:" in text
