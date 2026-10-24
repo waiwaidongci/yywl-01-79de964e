@@ -5,7 +5,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 RUN useradd --uid 10001 --create-home --shell /usr/sbin/nologin appuser \
     && mkdir -p /app /logs/verifier \
-    && chown -R appuser:appuser /app /logs
+    && chown -R appuser:appuser /app /logs \
+    && chmod 0777 /logs/verifier
 
 WORKDIR /app
 
